@@ -36,13 +36,13 @@ for i in `seq 1 $N`;
 do
         gcloud compute instances create "$worker"-"$i" \
         --machine-type n1-standard-1 \
+        --preemptible \
         --tags http-server,https-server \
         --metadata secret=$secretKey,serverip=`curl -s -H "Metadata-Flavor: Google" \
                                                "http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip"` \
         --metadata-from-file \
           startup-script=../worker-script.sh \
-        --quiet > /dev/null 2>&1 \ 
-        --preemptible &
+        --quiet > /dev/null 2>&1 &
 done;
 
 echo "Running server, please allow a few minutes!";
